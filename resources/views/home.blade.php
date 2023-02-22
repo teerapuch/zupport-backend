@@ -14,6 +14,12 @@
                         </div>
                     @endif
 
+                    @foreach ($users as $u)
+                        {{ $u->firstname }} | {{ $u->lastname }} | {{ $u->email }} 
+                        <br />
+                    @endforeach
+
+                    <br />
                     {{ __('You are logged in!') }}
                 </div>
             </div>

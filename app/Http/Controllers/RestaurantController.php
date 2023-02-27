@@ -3,6 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
+use Cache;
+use Input;
+use Session;
+use Redirect;
+
+// model
+use App\Models\User;
+use App\Models\Restaurant;
 
 class RestaurantController extends Controller
 {
@@ -12,6 +23,11 @@ class RestaurantController extends Controller
     public function index()
     {
         //
+        $users = User::where('deleted_at', 0)->get();
+        $restaurants = Restaurant::where('deleted_at', 0)->get();
+        Cache::put('restaurants', $restaurants);
+        return view('restaurant.index');
+        //return view('restaurant.index')->with('restaurants', $restaurants);
     }
 
     /**
@@ -27,7 +43,19 @@ class RestaurantController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // store
+        $restaurant = new Restaurant;
+        $restaurant->title = $request->input('title');
+        $restaurant->location = $request->input('location');
+        $restaurant->opening = $request->input('opening');
+        $restaurant->dayoff = $request->input('dayoff');
+        $restaurant->tel = $request->input('tel');
+        $restaurant->parking = $request->input('parking');
+        $restaurant->website = $request->input('website');
+        $restaurant->save();
+        // redirect
+        Session::flash('success', 'Successfully created restaurant!');
+        return Redirect::to('restaurant');
     }
 
     /**
@@ -60,5 +88,17 @@ class RestaurantController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function lists()
+    {
+        $result = Cache::remember('restaurants', 60, function () {
+            return Restaurant::get(); // get all form table to cache
+        });
+
+        return $result;
     }
 }

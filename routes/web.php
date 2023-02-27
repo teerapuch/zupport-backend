@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\RestaurantController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,4 +23,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::resource('restaurant', RestaurantController::class);
+Route::resource('/restaurant', RestaurantController::class);
+
+Route::get('/api/restaurant', [App\Http\Controllers\RestaurantController::class, 'lists']);

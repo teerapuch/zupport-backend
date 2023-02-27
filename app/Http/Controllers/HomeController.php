@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Cache;
+
+// modle
+use App\Models\Restaurant;
+
 class HomeController extends Controller
 {
     /**
@@ -23,6 +28,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $restaurants = Restaurant::where('deleted_at', 0)->get();
+        Cache::put('restaurants', $restaurants);
         return view('home');
     }
 }
